@@ -1,0 +1,72 @@
+version: 2.1
+
+executors:
+  testing_env:
+    machine:
+      image: windows-server-2022-gui:current
+    resource_class: windows.large
+
+commands:
+  install_deps:
+    steps:
+      - run:
+          command: |
+            choco install openjdk17 -y
+          shell: powershell.exe
+
+  run_tests:
+    steps:
+      - run:
+          command: |
+            java -jar ting.jar
+          shell: powershell.exe
+
+jobs:
+  test_suite:
+    executor: testing_env
+    parameters:
+      test_env:
+        type: string
+        default: "staging"
+    steps:
+      - checkout
+      - install_deps
+      - run_tests
+
+workflows:
+  quality_assurance:
+    jobs:
+      - test_suite:
+          matrix:
+            parameters:
+              test_env:
+                - "api-test-01"
+                - "ui-test-02"
+                - "db-test-03"
+                - "auth-test-04"
+                - "cache-test-05"
+                - "queue-test-06"
+                - "search-test-07"
+                - "mail-test-08"
+                - "file-test-09"
+                - "log-test-10"
+                - "metric-test-11"
+                - "backup-test-12"
+                - "sync-test-13"
+                - "migrate-test-14"
+                - "security-test-15"
+                - "load-test-16"
+                - "stress-test-17"
+                - "smoke-test-18"
+                - "regression-test-19"
+                - "integration-test-20"
+                - "unit-test-21"
+                - "perf-test-22"
+                - "e2e-test-23"
+                - "browser-test-24"
+                - "mobile-test-25"
+                - "tablet-test-26"
+                - "desktop-test-27"
+                - "network-test-28"
+                - "storage-test-29"
+                - "config-test-30"
